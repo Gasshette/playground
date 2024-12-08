@@ -1,36 +1,7 @@
-# React modular Playground
+import { useRef } from 'react';
+import { Playground } from './components/playground';
+import { PlaygroundHeaderProps } from './types/PlaygroundHeaderProps';
 
-This project provides a customizable playground for a React application.
-
-## Basic use
-This version will take the available space between the top of the component to the bottom of the screen
-```js
-<Playground />
-```
-
-The Playground uses @uiw/react-codemirror package as default editor but you can provide your own. See the Editor prop below.
-
-## Local use
-
-You can also use this playground inside a container. The playground will automatically fit the container depending on its size
-```js
-<div ref={parentRef}>
-  <Playground parentRef={parentRef} />
-</div>
-```
-
-# Customization
-You can customize the component with a lot of props to pass to the Playground. Check the repository types folder for the props list.
-
-A header can be provided to handle the fullscreen mode and the switch between the vertical and horizontal layout. You have access to all the playground props in your custom header.
-
-A simple debug mode is available to check the template
-
-*Note: There is no className or style for the wrapper. It makes the calculation way to random for me due to the use of `getComputedStyle` whitch does not provide clear informations about paddings, margin etc. You can still customize it through the className `modular-playground-wrapper` appled to it or by providing a custom wrapperRef to the Playground.*
-
-# Full example
-
-```js
 export const App = () => {
   const parentRef = useRef<HTMLDivElement>(null);
 
@@ -102,4 +73,3 @@ const CustomHeader = (props: PlaygroundHeaderProps) => {
     </div>
   );
 };
-```# playground
