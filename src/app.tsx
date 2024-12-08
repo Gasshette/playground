@@ -1,36 +1,7 @@
-# React modular Playground
+import { useRef } from 'react';
+import { PlaygroundHeaderProps } from '../lib/types/PlaygroundHeaderProps';
+import { Playground } from '../lib/components/playground';
 
-This project provides a customizable playground for a React application.
-
-## Basic use
-This version will take the available space between the top of the component to the bottom of the screen
-```js
-<Playground />
-```
-
-The Playground uses @uiw/react-codemirror package as default editor but you can provide your own. See the Editor prop below.
-
-## Local use
-
-You can also use this playground inside a container. The playground will automatically fit the container depending on its size
-```js
-<div ref={parentRef}>
-  <Playground parentRef={parentRef} />
-</div>
-```
-
-# Customization
-You can customize the component with a lot of props to pass to the Playground. Check the repository types folder for the props list.
-
-A header can be provided to handle the fullscreen mode and the switch between the vertical and horizontal layout. You have access to all the playground props in your custom header.
-
-A simple debug mode is available to check the template
-
-*Note: There is no className or style for the wrapper. It makes the calculation pretty complicated due to the use of `getComputedStyle` which does not provide clear informations about paddings, margins etc. You can still customize it through the `modular-playground-wrapper` class applied to it or by providing a custom wrapperRef to the Playground.*
-
-# Full example
-
-```js
 export const App = () => {
   const parentRef = useRef<HTMLDivElement>(null);
 
@@ -53,7 +24,7 @@ export const App = () => {
     <div>
       <Playground
         headerStyle={headerStyle}
-        Header={(props) => <CustomHeader {...props} />}
+        Header={(props: PlaygroundHeaderProps) => <CustomHeader {...props} />}
         onBeforeResize={() => console.log('onBeforeResize')} // triggered right before the mousedown event on the handle
         onAfterResize={() => console.log('onAfterResize')} // triggered right before the mousedown event is removed
       />
@@ -62,7 +33,7 @@ export const App = () => {
           <Playground
             parentRef={parentRef}
             headerStyle={headerStyle}
-            Header={(props) => <CustomHeader {...props} />}
+            Header={(props: PlaygroundHeaderProps) => <CustomHeader {...props} />}
           />
         </div>
       </div>
@@ -102,4 +73,3 @@ const CustomHeader = (props: PlaygroundHeaderProps) => {
     </div>
   );
 };
-```
