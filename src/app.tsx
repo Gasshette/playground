@@ -1,75 +1,68 @@
-import { useRef } from 'react';
-import { PlaygroundHeaderProps } from '../lib/types/PlaygroundHeaderProps';
-import { Playground } from '../lib/components/playground';
+import { PlaygroundProvider } from '../lib/Contexts/PlaygroundProvider';
+import { Title } from './components/Title';
+import { Playground } from '../lib';
+import { Header } from './components/Header';
+import { Hint } from './components/Hint';
+import { View } from './components/View';
+import { RealExample } from './components/RealExample';
 
 export const App = () => {
-  const parentRef = useRef<HTMLDivElement>(null);
-
-  const headerStyle = {
-    display: 'flex',
-    gap: 2,
-    paddingBottom: '4px',
-    paddingTop: '4px'
-  };
-
-  const parentStyle = {
-    width: '500px',
-    height: '500px',
-    padding: '30px',
-    flexShrink: 0,
-    border: '1px solid black'
+  const paneWrapperStyle = {
+    outline: '1px solid rgba(25, 25, 25, .5)',
+    borderRadius: 4
   };
 
   return (
     <div>
-      <Playground
-        headerStyle={headerStyle}
-        Header={(props: PlaygroundHeaderProps) => <CustomHeader {...props} />}
-        onBeforeResize={() => console.log('onBeforeResize')} // triggered right before the mousedown event on the handle
-        onAfterResize={() => console.log('onAfterResize')} // triggered right before the mousedown event is removed
-      />
-      <div style={{ display: 'flex', gap: 2, justifyContent: 'center', marginTop: '16px' }}>
-        <div ref={parentRef} style={parentStyle}>
+      <Title>Fullfilling the view</Title>
+      <Hint>The playground extend to the bottom of the screen</Hint>
+      <PlaygroundProvider>
+        <Playground Header={Header} View={View} />
+      </PlaygroundProvider>
+      <Title>Containerized: height is mandatory, width is optional</Title>
+      <Hint>Some style are required when in a flex container</Hint>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: 10
+        }}>
+        <PlaygroundProvider>
           <Playground
-            parentRef={parentRef}
-            headerStyle={headerStyle}
-            Header={(props: PlaygroundHeaderProps) => <CustomHeader {...props} />}
+            height={600}
+            wrapperStyle={{ boxSizing: 'border-box', padding: 10 }}
+            paneWrapperStyle={paneWrapperStyle}
+            Header={Header}
+            View={View}
           />
-        </div>
+        </PlaygroundProvider>
+        <PlaygroundProvider>
+          <Playground
+            width={400}
+            height={`300px`} // Size props also accept string
+            wrapperStyle={{ flexShrink: 0, boxSizing: 'border-box', padding: 10 }} // The first Playground has no width set which default to 100%, preventing shrinking here is therefore necessary
+            paneWrapperStyle={paneWrapperStyle}
+            Header={Header}
+            View={View}
+          />
+        </PlaygroundProvider>
       </div>
-    </div>
-  );
-};
-
-const CustomHeader = (props: PlaygroundHeaderProps) => {
-  const { isFullScreen, isVertical, handleFullScreen, setIsVertical } = props;
-
-  const buttonStyle = {
-    padding: '8px',
-    backgroundColor: 'rgba(220, 40, 0, 0.8)',
-    color: '#FFF',
-    borderRadius: '4px',
-    border: 'none',
-    cursor: 'pointer'
-  };
-
-  return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'end',
-        flexGrow: 1,
-        gap: 2
-      }}>
-      <div style={{ flexGrow: 1 }}></div>
-      <button style={buttonStyle} onClick={handleFullScreen}>
-        {isFullScreen ? 'Exit fullScreen' : 'Go fullScreen'}
-      </button>
-      <button
-        style={{ ...buttonStyle, backgroundColor: 'rgba(0, 100, 220, 0.8)' }}
-        onClick={() => setIsVertical(!isVertical)}>
-        {isVertical ? 'Horizontal' : 'Vertical'} &#8634;
-      </button>
+      <Title>100% sizes with a sized container</Title>
+      <div style={{ width: 500, height: 500 }}>
+        <PlaygroundProvider>
+          <Playground
+            width={'100%'}
+            height={`100%`} // Size props also accept string
+            wrapperStyle={{ flexShrink: 0, boxSizing: 'border-box', padding: 10 }} // The first Playground has no width set which default to 100%, preventing shrinking here is therefore necessary
+            paneWrapperStyle={paneWrapperStyle}
+            Header={Header}
+            View={View}
+          />
+        </PlaygroundProvider>
+      </div>
+      <Title>Real use case example</Title>
+      <RealExample />
     </div>
   );
 };

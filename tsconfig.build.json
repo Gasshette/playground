@@ -1,4 +1,18 @@
 {
   "extends": "./tsconfig.app.json",
-  "include": ["lib"]
+  "include": ["lib/**/*", "internals/**/*"],
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "rootDir": ".",
+    "outDir": "dist",
+    
+    /* Aliases */
+    "paths": {
+      "@lib/*": ["lib/*"],
+      "@int/*": ["internals/*"],
+    }
+  },
 }

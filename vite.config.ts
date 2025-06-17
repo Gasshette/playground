@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
-import { resolve } from 'path';
+import path, { resolve } from 'path';
 import dts from 'vite-plugin-dts';
 import { libInjectCss } from 'vite-plugin-lib-inject-css';
 
@@ -10,7 +10,7 @@ export default defineConfig({
     react(),
     libInjectCss(),
     dts({
-      include: ['lib'],
+      include: ['lib', 'internals'],
       rollupTypes: true,
       tsconfigPath: 'tsconfig.build.json',
       outDir: 'dist'
@@ -25,6 +25,12 @@ export default defineConfig({
     },
     rollupOptions: {
       external: ['react', 'react/jsx-runtime']
+    }
+  },
+  resolve: {
+    alias: {
+      '@lib': path.resolve(__dirname, 'lib'),
+      '@int': path.resolve(__dirname, 'internals')
     }
   }
 });
