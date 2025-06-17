@@ -6,6 +6,7 @@
   "files": [
     "dist"
   ],
+  "homepage": "https://gasshette.github.io/playground",
   "main": "./dist/index.umd.cjs",
   "types": "./dist/index.d.ts",
   "module": "./dist/index.js",
@@ -17,11 +18,15 @@
   },
   "scripts": {
     "dev": "vite --open",
-    "build": "tsc --p ./tsconfig.build.json --declaration --emitDeclarationOnly --jsx react-jsx --esModuleInterop && vite build",
+    "predeploy": "npm run build:demo",
+    "deploy": "gh-pages -d build",
+    "build": "tsc --p ./tsconfig.build.json && vite build",
+    "build:demo": "vite build --config vite.demo.config.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codemirror/lang-css": "^6.3.1",
     "@codemirror/lang-javascript": "^6.2.2",
     "@uiw/react-codemirror": "^4.22.2",
     "react": "^18.2.0",
@@ -47,6 +52,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "gh-pages": "^6.3.0",
     "typescript": "^5.2.2",
     "vite": "^5.3.1",
     "vite-plugin-dts": "^4.3.0",
@@ -67,6 +73,5 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Gasshette/playground/issues"
-  },
-  "homepage": "https://github.com/Gasshette/playground#readme"
+  }
 }
