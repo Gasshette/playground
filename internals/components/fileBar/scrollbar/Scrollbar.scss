@@ -1,0 +1,53 @@
+/* Hide native scrollbars for containers with custom scrollbar */
+.custom-scrollbar-container::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.custom-scrollbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 10;
+
+  // Show scrollbar when parent is hovered and has overflow
+  &.parent-hovered.has-overflow {
+    opacity: .8;
+    pointer-events: auto;
+  }
+
+  // Show scrollbar when dragging
+  &.dragging {
+    opacity: 1;
+    pointer-events: auto;
+
+    .scrollbar-thumb {
+      background: var(--playground-color-100);
+    }
+  }
+
+  .scrollbar-track {
+    position: relative;
+    height: 100%;
+    background: var(--playground-color-950);
+    box-shadow: 0px 0px 2px var(--playground-color-100);
+    cursor: pointer;
+  }
+
+  .scrollbar-thumb {
+    position: absolute;
+    border-radius: 4px;
+    height: 100%;
+    background: var(--playground-color-100);
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: var(--playground-color-300);
+    }
+  }
+}

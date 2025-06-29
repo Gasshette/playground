@@ -6,8 +6,8 @@ export const Title = (props: BaseProps) => {
       style={{
         fontSize: '1.7rem',
         fontWeight: 600,
-        marginTop: '2rem',
-        marginBottom: '1rem'
+        paddingTop: '2rem',
+        paddingBottom: '1rem'
       }}>
       {props.children}
     </h1>

@@ -2,7 +2,7 @@ import { usePlaygroundContext } from '../../lib/Contexts/PlaygroundProvider';
 
 export const Header = () => {
   const { setPlaygroundState, playgroundState } = usePlaygroundContext();
-  const { isFullScreen } = playgroundState;
+  const { isFullScreenStarted } = playgroundState;
 
   const handleDirection = () => {
     setPlaygroundState((prev) => ({
@@ -12,13 +12,13 @@ export const Header = () => {
   };
 
   const handleFullScreen = () => {
-    setPlaygroundState((prev) => ({ ...prev, isFullScreen: !prev.isFullScreen }));
+    setPlaygroundState((prev) => ({ ...prev, isFullScreenStarted: !prev.isFullScreenStarted }));
   };
 
   return (
     <div style={{ display: 'flex', gap: 2, boxSizing: 'border-box', paddingBottom: 10 }}>
       <button onClick={handleDirection}>Change direction</button>
-      <button onClick={handleFullScreen}>{isFullScreen ? 'Unset' : 'Set'} fullscreen</button>
+      <button onClick={handleFullScreen}>{isFullScreenStarted ? 'Unset' : 'Set'} fullscreen</button>
     </div>
   );
 };

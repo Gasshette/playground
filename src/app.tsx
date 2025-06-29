@@ -1,68 +1,95 @@
-import { PlaygroundProvider } from '../lib/Contexts/PlaygroundProvider';
-import { Title } from './components/Title';
-import { Playground } from '../lib';
-import { Header } from './components/Header';
+import { PlaygroundProvider } from '@lib/index';
 import { Hint } from './components/Hint';
-import { View } from './components/View';
-import { RealExample } from './components/RealExample';
+import { MultiFilePlayground } from './components/MultiFilePlayground';
+import { Title } from './components/Title';
+import { PlaygroundImpl } from './components/PlaygroundImpl';
+import { UserFile } from '@lib/types/UserFile';
+import { FileBarThemes } from '@lib/types/FileBarThemes';
+import './reset.css';
+
+const theme: FileBarThemes = {
+  dark: {
+    colors: {
+      background: 'chocolate',
+      color: 'black',
+      danger: 'darkred',
+      hover: 'sandybrown',
+      indicator: 'sandybrown'
+    }
+  },
+  light: {
+    colors: {
+      background: 'mistyrose',
+      color: 'purple',
+      danger: 'purple',
+      hover: 'lavenderblush',
+      indicator: 'purple'
+    }
+  }
+};
+
+const defaultFiles: Array<UserFile> = [
+  {
+    name: 'demo.html',
+    content: `<h1>Demo</h1>
+<p>This playground is so awesome ! &#10084;</p>
+<img src="https://picsum.photos/200" alt="picsum random image" />`
+  },
+  {
+    name: 'demo.css',
+    content: `body {
+  background: mistyrose;
+}
+
+#MyView {
+  color: purple;
+  padding: 16px;
+}`
+  }
+];
 
 export const App = () => {
-  const paneWrapperStyle = {
-    outline: '1px solid rgba(25, 25, 25, .5)',
-    borderRadius: 4
-  };
-
   return (
     <div>
       <Title>Fullfilling the view</Title>
       <Hint>The playground extend to the bottom of the screen</Hint>
-      <PlaygroundProvider>
-        <Playground Header={Header} View={View} />
+      <Hint>Vertical paddings and margin aren't taken into account and will impact the layout</Hint>
+      <PlaygroundProvider defaultFiles={defaultFiles}>
+        <PlaygroundImpl />
       </PlaygroundProvider>
       <Title>Containerized: height is mandatory, width is optional</Title>
-      <Hint>Some style are required when in a flex container</Hint>
+      <Hint>Some style might be required if the playground is used in a flex container</Hint>
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom: 10
+          justifyContent: 'center'
         }}>
-        <PlaygroundProvider>
-          <Playground
-            height={600}
-            wrapperStyle={{ boxSizing: 'border-box', padding: 10 }}
-            paneWrapperStyle={paneWrapperStyle}
-            Header={Header}
-            View={View}
-          />
+        <PlaygroundProvider defaultFiles={defaultFiles}>
+          <PlaygroundImpl height={600} />
         </PlaygroundProvider>
-        <PlaygroundProvider>
-          <Playground
+        <PlaygroundProvider defaultFiles={defaultFiles}>
+          <PlaygroundImpl
             width={400}
             height={`300px`} // Size props also accept string
-            wrapperStyle={{ flexShrink: 0, boxSizing: 'border-box', padding: 10 }} // The first Playground has no width set which default to 100%, preventing shrinking here is therefore necessary
-            paneWrapperStyle={paneWrapperStyle}
-            Header={Header}
-            View={View}
+            wrapperStyle={{ flexShrink: 0 }} // The first Playground has no width set which default to 100%, preventing shrinking here is therefore necessary
           />
         </PlaygroundProvider>
       </div>
       <Title>100% sizes with a sized container</Title>
       <div style={{ width: 500, height: 500 }}>
-        <PlaygroundProvider>
-          <Playground
-            width={'100%'}
-            height={`100%`} // Size props also accept string
-            wrapperStyle={{ flexShrink: 0, boxSizing: 'border-box', padding: 10 }} // The first Playground has no width set which default to 100%, preventing shrinking here is therefore necessary
-            paneWrapperStyle={paneWrapperStyle}
-            Header={Header}
-            View={View}
-          />
+        <PlaygroundProvider defaultFiles={defaultFiles}>
+          <PlaygroundImpl height={`100%`} />
         </PlaygroundProvider>
       </div>
-      <Title>Real use case example</Title>
-      <RealExample />
+      <Title>Multi file + style customization</Title>
+      <Hint>
+        You can customize the filebar style to your heart content to match your own theme. You can
+        provide themes (light and dark) through the codeMirrorThemes provider property
+      </Hint>
+      <PlaygroundProvider fileBarThemes={theme} defaultFiles={defaultFiles}>
+        <MultiFilePlayground height={800} />
+      </PlaygroundProvider>
     </div>
   );
 };

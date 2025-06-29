@@ -3,103 +3,219 @@
 This project provides a customizable playground for a React application.
 
 ## Basic use
-This version will take the available space between the top of the component to the bottom of the screen
+The simpliest version will extends to the bottom of the screen:
 ```js
-<Playground />
+<PlaygroundProvider defaultFiles={defaultFiles}>
+  <Playground View={View} defaultFiles={defaultFiles} />
+</PlaygroundProvider>
 ```
+defaultFiles are the default files you want to see in the file bar: 
+```jsx
+const defaultFiles: Array<UserFile> = [{name: "demo.html", content:"<h1>My Tile</h1>\n<p>My content</p>"}]
+```
+The provider is mandatory, it gives you acces to all the provider states and refs.
+You have to provide the View component: you decide what to do with the content you write in the editor. You can refer to the View component in the Github repository for an example that retrieve the files content and fill an iframe.
 
-The Playground uses @uiw/react-codemirror package as default editor but you can provide your own. See the Editor prop below.
+The view can subscribe to a _Run_ event. If there is any subscriber, a "Run" button will appear in the file bar to trigger the event and notify the subscribers. The View can therefore do its job at this moment. An example is available in the View component in the Github repository.
 
-## Local use
+_Note: Vertical paddings and margins impact the overflow of the page. By using the Playground as demonstrated, you should avoid providing padding top and bottom to the customizable parts of the playground._
 
-You can also use this playground inside a container. The playground will automatically fit the container depending on its size
+The Playground uses @uiw/react-codemirror as editor.
+
+## Containerized use
+
+You can also use this playground inside a container. The playground will automatically fit the container depending on its size:
 ```js
-<div ref={parentRef}>
-  <Playground parentRef={parentRef} />
+<div
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }}>
+  <PlaygroundProvider defaultFiles={defaultFiles}>
+    <Playground View={View} defaultFiles={defaultFiles} height={600} />
+  </PlaygroundProvider>
+  <PlaygroundProvider defaultFiles={defaultFiles}>
+    <Playground
+      View={View} 
+      defaultFiles={defaultFiles}
+      width={400}
+      height={`300px`} // Size props also accept string
+      wrapperStyle={{ flexShrink: 0 }} // The first Playground has no width set which default to 100%, preventing shrinking here is therefore necessary
+    />
+  </PlaygroundProvider>
 </div>
 ```
 
-# Customization
-You can customize the component with a lot of props to pass to the Playground. Check the repository types folder for the props list.
+Or if your container already has fixed sizes:
+```jsx
+<div style={{ width: 500, height: 500 }}>
+  <PlaygroundProvider defaultFiles={defaultFiles}>
+    <Playground 
+      View={View} 
+      defaultFiles={defaultFiles}
+      height={`100%`}
+    />
+  </PlaygroundProvider>
+</div>
+```
 
-A header can be provided to handle the fullscreen mode and the switch between the vertical and horizontal layout. You have access to all the playground props in your custom header.
+## Multiple files + customization
+By default, the playground is locked with the default files provided. The _multiFile_ props allows you to add more files. The file name must be unique (deleted elements included). You can delete a file and get it back with the revert button.
 
-A simple debug mode is available to check the template
+You can provide a custom theme through the _codeMirrorThemes_ provider prop. If you do so, you will also need to provides few colors to the fileBar through the _fileBarThemes_ provider prop. Both prop are optionnal and using one does not require to provide the second and vice versa but the themes won't match.
+The filebar uses the default CodeMirror themes (_oneDark_ and its light version) if something is not provided:
+```jsx
+import { basicDark, basicLight } from '@uiw/codemirror-themes-all';
 
-*Note: There is no className or style for the wrapper. It makes the calculation pretty complicated due to the use of `getComputedStyle` which does not provide clear informations about paddings, margins etc. You can still customize it through the `modular-playground-wrapper` class applied to it or by providing a custom wrapperRef to the Playground.*
-
-# Full example
-
-```js
-export const App = () => {
-  const parentRef = useRef<HTMLDivElement>(null);
-
-  const headerStyle = {
-    display: 'flex',
-    gap: 2,
-    paddingBottom: '4px',
-    paddingTop: '4px'
-  };
-
-  const parentStyle = {
-    width: '500px',
-    height: '500px',
-    padding: '30px',
-    flexShrink: 0,
-    border: '1px solid black'
-  };
-
-  return (
-    <div>
-      <Playground
-        headerStyle={headerStyle}
-        Header={(props) => <CustomHeader {...props} />}
-        onBeforeResize={() => console.log('onBeforeResize')} // triggered right before the mousedown event on the handle
-        onAfterResize={() => console.log('onAfterResize')} // triggered right before the mousedown event is removed
-      />
-      <div style={{ display: 'flex', gap: 2, justifyContent: 'center', marginTop: '16px' }}>
-        <div ref={parentRef} style={parentStyle}>
-          <Playground
-            parentRef={parentRef}
-            headerStyle={headerStyle}
-            Header={(props) => <CustomHeader {...props} />}
-          />
-        </div>
-      </div>
-    </div>
-  );
+// Don't be mean, these colors are awesome !
+const theme: FileBarThemes = {
+  dark: {
+    colors: {
+      background: 'chocolate',
+      color: 'black',
+      danger: 'darkred',
+      hover: 'sandybrown',
+      indicator: 'sandybrown'
+    }
+  },
+  light: {
+    colors: {
+      background: 'mistyrose',
+      color: 'purple',
+      danger: 'purple',
+      hover: 'lavenderblush',
+      indicator: 'purple'
+    }
+  }
 };
 
-const CustomHeader = (props: PlaygroundHeaderProps) => {
-  const { isFullScreen, isVertical, handleFullScreen, setIsVertical } = props;
-
-  const buttonStyle = {
-    padding: '8px',
-    backgroundColor: 'rgba(220, 40, 0, 0.8)',
-    color: '#FFF',
-    borderRadius: '4px',
-    border: 'none',
-    cursor: 'pointer'
-  };
-
-  return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'end',
-        flexGrow: 1,
-        gap: 2
-      }}>
-      <div style={{ flexGrow: 1 }}></div>
-      <button style={buttonStyle} onClick={handleFullScreen}>
-        {isFullScreen ? 'Exit fullScreen' : 'Go fullScreen'}
-      </button>
-      <button
-        style={{ ...buttonStyle, backgroundColor: 'rgba(0, 100, 220, 0.8)' }}
-        onClick={() => setIsVertical(!isVertical)}>
-        {isVertical ? 'Horizontal' : 'Vertical'} &#8634;
-      </button>
-    </div>
-  );
+const codeMirrorTheme = { 
+  light: basicLight, 
+  dark: basicDark 
 };
+
+<PlaygroundProvider fileBarThemes={theme} codeMirrorThemes={codeMirrorTheme} defaultFiles={defaultFiles}>
+  <Playground 
+    multiFile
+    View={View}
+    Header={Header}
+    View={View}
+    defaultFiles={defaultFiles}
+    wrapperStyle={{
+      paddingRight: 10,
+      paddingLeft: 10,
+    }}
+    paneWrapperStyle={{
+      boxShadow: '0px 0px 3px rgba(25, 25, 25, .5)',
+      borderRadius: 4,
+    }}
+  />
+</PlaygroundProvider>
+```
+As you can see, you can also provide a Header component which allows you to change the Playground orientation and toggle a fullscreen mode. You can lso access all the props and the context inside if needed.
+
+The provided colors, depending on the current theme selected, are used to build a color map that is provided to the Playground. Multiple Playground can be used in the same page with different colors theme.
+
+# Types
+You can find all the type on the github page. Here are those I would like to see if I was a user:
+## PlaygroundProviderProps
+```ts
+interface PlaygroundProviderProps {
+  children: React.ReactNode;
+  /**
+   * The default files to display in the file bar.
+   */
+  defaultFiles: Array<UserFile>;
+  /**
+   * Customize the files bar.
+   */
+  fileBarThemes?: FileBarThemes;
+  /**
+   * CodeMirror compatible themes: light and dark.
+   */
+  codeMirrorThemes?: CodeMirrorThemes;
+}
+```
+## PlaygroundContext
+```ts
+export interface PlaygroundContext {
+  fileBarThemes: FileBarThemes;
+  codeMirrorThemes: CodeMirrorThemes;
+  events: EventBus;
+  playgroundState: PlaygroundState;
+  setPlaygroundState: React.Dispatch<React.SetStateAction<PlaygroundState>>;
+  updateFileState: (newState: EditorState) => void;
+  wrapperRef: RefObject<HTMLDivElement>;
+  headerRef: RefObject<HTMLDivElement>;
+  paneWrapperRef: RefObject<HTMLDivElement>;
+  editorPaneRef: RefObject<HTMLDivElement>;
+  viewPaneRef: RefObject<HTMLDivElement>;
+  handleRef: RefObject<HTMLDivElement>;
+  fileBarRef: RefObject<HTMLDivElement>;
+  codeMirrorRef: React.MutableRefObject<ReactCodeMirrorRef | undefined>;
+}
+```
+## PlaygroundState
+```ts
+export interface PlaygroundState {
+  /**
+   * The Playground orientation.
+   */
+  direction: 'row' | 'column';
+  /**
+   * Triggers when the fullscreen is asked, before the style is applied.
+   */
+  isFullScreenStarted: boolean;
+  /**
+   * Triggers when the style is changed for a fullscreen view.
+   */
+  isFullScreenFinished: boolean;
+  /**
+   * The list of all the files (deleted element not included).
+   */
+  files: Array<CodeMirrorFile>;
+  /**
+   * The currently selected file name.
+   */
+  currentFileName: string;
+  /**
+   * The editor config.
+   */
+  editorConfig: EditorConfig;
+}
+```
+## FileBarThemes and colors
+```ts
+export interface FileBarThemeColors {
+  /**
+   * The text color.
+   */
+  color: string;
+  /**
+   * The files bar background.
+   */
+  background: string;
+  /**
+   * Basically a red color for remove buttons.
+   */
+  danger: string;
+  /**
+   * The indicator under the active file. Its color is also applied to the handle for harmony, but can be overriden with the Playground's HandleCOlor props.
+   */
+  indicator: string;
+  /**
+   * The hover color.
+   */
+  hover: string;
+}
+
+export interface FileBarThemes {
+  light: {
+    colors: FileBarThemeColors;
+  };
+  dark: {
+    colors: FileBarThemeColors;
+  };
+}
 ```

@@ -1,0 +1,11 @@
+#modular-playground .toast {
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 10px;
+
+  &.toast-error {
+    background: var(--playground-danger-500);
+    box-shadow: 0px 0px 8px var(--playground-danger-700);
+    color: light-dark(#ffffff, #000000);
+  }
+}

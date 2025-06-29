@@ -1,0 +1,27 @@
+#modular-playground .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    padding: 2px;
+
+    &:hover {
+      background-color: var(--playground-hover-500);
+    }
+
+    &:disabled {
+      cursor: default;
+    }
+
+  &.btn-info {
+    color: var(--playground-color-500);
+  }
+  &.btn-danger {
+    color: var(--playground-danger-500);
+  }
+}

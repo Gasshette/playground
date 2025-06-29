@@ -1,0 +1,37 @@
+#modular-playground .files-bar {
+  display: flex;
+  height: 36px;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--playground-color-500);
+  background: var(--playground-background-500);
+  
+  .file-list-wrapper {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    align-self: stretch;
+    overflow: hidden;
+
+    & > * {
+      flex: 1 1 auto;
+    }
+
+    .file-list {
+      width: 100%;
+      display: flex;
+      position: relative;
+      overflow: auto;
+    }
+  }
+
+  .button-container {
+    display: flex; 
+    gap: 4px; 
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+}

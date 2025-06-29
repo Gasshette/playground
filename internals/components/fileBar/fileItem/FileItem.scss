@@ -1,0 +1,59 @@
+#modular-playground .file-item {
+  position: relative;
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  cursor: pointer;
+
+  &.selected {
+    background-color: var(--playground-background-700);
+    
+    &:hover .btn-remove {
+      visibility: visible;
+      pointer-events: all;
+    }
+  }
+
+  .btn-remove {
+    margin-left: 4px;
+    margin-right: 4px;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .hidden {
+    visibility: hidden !important;
+  }
+
+  &:hover:not(.selected) {
+    background-color: var(--playground-hover-500);
+  }
+
+  .add-form {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background-color: var(--playground-background-400);
+    
+    &.errored {
+      border: 1px solid var(--playground-danger-500);
+    }
+
+    input {
+      width: 100px;
+      border: none;
+      align-self: stretch;
+      background-color: transparent;
+      outline: 0;
+      color: var(--playground-color-400);
+      caret-color: var(--playground-color-500);
+
+      &::placeholder {
+        font-style: italic;
+        color: var(--playground-color-500)
+      }
+    }
+  }
+}

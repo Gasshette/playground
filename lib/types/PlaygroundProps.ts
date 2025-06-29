@@ -5,11 +5,11 @@ export interface PlaygroundProps {
   /**
    * The Playground View.
    */
-  View: React.FunctionComponent;
+  View: React.FunctionComponent<PlaygroundProps>;
   /**
    * The Playground Header component. If provided, it will be displayed over the container.
    */
-  Header?: React.FunctionComponent;
+  Header?: React.FunctionComponent<PlaygroundProps>;
   /**
    * The Playground width.
    */
@@ -49,4 +49,16 @@ export interface PlaygroundProps {
    * The CodeMirror configuration object that will be passed to the editor.
    */
   codeMirrorProps?: ReactCodeMirrorProps;
+  /**
+   * Wether the editor can manage multiple files or not.
+   */
+  multiFile?: boolean;
+  /**
+   * Override the handle color on hover. If you have provided a theme, handleColor prop will also override it.
+   */
+  handleColor?: string;
+  /**
+   * Override the overflow behaviour of the view pane. Default is 'hidden'
+   */
+  viewPaneOverflow?: string;
 }

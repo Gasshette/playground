@@ -1,9 +1,8 @@
-import { PlaygroundProps } from '../lib/types/PlaygroundProps';
-import { usePlaygroundContext } from '../lib/Contexts/PlaygroundProvider';
-import { EditorPane } from './EditorPane';
-import { Handle } from './Handle';
-import { ViewPane } from './ViewPane';
-
+import { PlaygroundProps } from '../../../lib/types/PlaygroundProps';
+import { usePlaygroundContext } from '../../../lib/Contexts/PlaygroundProvider';
+import { EditorPane } from '../editorPane/EditorPane';
+import { Handle } from '../handle/Handle';
+import { ViewPane } from '../viewPane/ViewPane';
 interface InnerPlaygroundProps extends PlaygroundProps {
   paneWrapperHeight: string | number;
 }

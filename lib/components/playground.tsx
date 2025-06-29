@@ -1,7 +1,9 @@
 import { useState, CSSProperties, useMemo, useEffect } from 'react';
 import { PlaygroundProps } from '../types/PlaygroundProps';
 import { usePlaygroundContext } from '../Contexts/PlaygroundProvider';
-import { InnerPlayground } from '@int/InnerPlayground';
+import { InnerPlayground } from '@int/components/innerPlayground/InnerPlayground';
+import { CssTheme } from '@int/components/CssTheme';
+
 const DEFAULT_HEIGHT = 400;
 
 export const Playground = (props: PlaygroundProps) => {
@@ -10,11 +12,11 @@ export const Playground = (props: PlaygroundProps) => {
   const [paneWrapperHeight, setPaneWrapperHeight] = useState<string | number>(DEFAULT_HEIGHT);
   const { playgroundState, setPlaygroundState, wrapperRef, headerRef } = usePlaygroundContext();
 
-  const { isFullScreen } = playgroundState;
+  const { isFullScreenStarted } = playgroundState;
 
   const style: CSSProperties = useMemo(
     () => ({
-      ...(isFullScreen
+      ...(isFullScreenStarted
         ? {
             display: 'flex',
             flexDirection: 'column',
@@ -32,11 +34,11 @@ export const Playground = (props: PlaygroundProps) => {
             width: width ?? '100%',
             height: height ?? 'unset',
             zIndex: 'unset',
-            overflow: 'hidden'
+            overflow: 'visible'
           }),
       ...wrapperStyle
     }),
-    [isFullScreen, width, height, wrapperStyle]
+    [isFullScreenStarted, width, height, wrapperStyle]
   );
 
   const isNumeric = (value: string | number): boolean => {
@@ -45,35 +47,74 @@ export const Playground = (props: PlaygroundProps) => {
   };
 
   useEffect(() => {
-    let newHeight: string | number | undefined = undefined;
+    const handlePaneWrapperHeight = () => {
+      let newHeight: string | number | undefined = undefined;
 
-    if (headerRef.current && wrapperRef.current) {
-      if (!height || isFullScreen) {
-        // Do calculation for the panes (editor and view) to expand to te end of the viewport (not exceeding the viewport height by removing the scrollY)
-        const rect = headerRef.current.getBoundingClientRect();
-        newHeight = `calc(100dvh - ${isFullScreen ? rect.height : rect.bottom + window.scrollY}px)`;
-      } else {
-        // Do calculation for the panes to have the given height - the header height
-        const rect = headerRef.current.getBoundingClientRect();
-        const validHeight = isNumeric(height) ? `${height}px` : height;
-        newHeight = `calc(${validHeight} - ${rect.height}px)`;
+      if (headerRef.current && wrapperRef.current) {
+        if (!height || isFullScreenStarted) {
+          // Do calculation for the panes (editor and view) to expand to te end of the viewport (not exceeding the viewport height by removing the scrollY)
+          const rect = headerRef.current.getBoundingClientRect();
+          newHeight = `calc(${window.innerHeight}px - ${
+            isFullScreenStarted ? rect.height : rect.bottom + window.scrollY
+          }px)`;
+        } else {
+          // Do calculation for the panes to have the given height - the header height
+          const rect = headerRef.current.getBoundingClientRect();
+          const validHeight = isNumeric(height) ? `${height}px` : height;
+          newHeight = `calc(${validHeight} - ${rect.height}px)`;
+        }
+
+        setPaneWrapperHeight(newHeight);
+        setPlaygroundState((prev) => ({ ...prev, isFullScreenFinished: prev.isFullScreenStarted }));
+      }
+    };
+
+    handlePaneWrapperHeight();
+
+    let resizeTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    const onResize = () => {
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
       }
 
-      setPaneWrapperHeight(newHeight);
-      setPlaygroundState((prev) => ({ ...prev, isFullScreenDOMApplied: prev.isFullScreen }));
-    }
-  }, [headerRef.current, height, setPaneWrapperHeight, isFullScreen]);
+      resizeTimeout = setTimeout(() => {
+        // Called at the end of the resize
+        handlePaneWrapperHeight();
+      }, 200);
+    };
+
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
+      }
+
+      window.removeEventListener('resize', onResize);
+    };
+  }, [
+    height,
+    isFullScreenStarted,
+    headerRef,
+    wrapperRef,
+    setPlaygroundState,
+    setPaneWrapperHeight
+  ]);
 
   useEffect(() => {
-    document.body.style.overflow = isFullScreen ? 'hidden' : 'auto';
-  }, [isFullScreen]);
+    document.body.style.overflow = isFullScreenStarted ? 'hidden' : 'auto';
+  }, [isFullScreenStarted]);
 
   return (
     <div
       ref={wrapperRef}
+      id="modular-playground"
       className={`PlaygroundWrapper ${wrapperClassNames ?? ''}`.trim()}
       style={style}>
-      <div ref={headerRef}>{Header && <Header />}</div>
+      <CssTheme containerRef={wrapperRef} />
+
+      <div ref={headerRef}>{Header && <Header {...props} />}</div>
       {paneWrapperHeight && <InnerPlayground {...props} paneWrapperHeight={paneWrapperHeight} />}
     </div>
   );

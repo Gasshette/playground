@@ -1,0 +1,40 @@
+#modular-playground .menu {
+  text-decoration: none;
+  list-style-type: none;
+  background-color: var(--playground-background-500);
+  border: 1px solid var(--playground-color-900);
+  border-radius: 4px;
+  box-shadow: 0px 0px 8px var(--playground-color-700);
+  margin-right: 13px;
+  margin-top: 10px;
+
+  
+  & > div {
+    cursor: pointer;
+    color: var(--playground-color-500);
+    
+    &:hover > div > div {
+      background-color: var(--playground-hover-500);
+    }
+
+    &:not(&:last-child) {
+      border-bottom: 1px solid var(--playground-color-900);
+    }
+
+    & > div {
+      padding: 4px;
+      padding-top: 0;
+      padding-bottom: 0;
+
+      & > div {
+        display: inline-block;
+        width: 100%;
+        padding: 2px;
+        padding-left: 4px;
+        border-radius: 4px;
+        margin: 4px;
+        margin-left: 0;
+      }
+    }
+  }  
+}
