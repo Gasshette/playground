@@ -42,7 +42,8 @@ export const FileBar = (props: PlaygroundProps) => {
       if (file) {
         setPlaygroundState((prev) => ({
           ...prev,
-          files: [...prev.files, file]
+          files: [...prev.files, file],
+          currentFileName: prev.files.length <= 0 ? file.name : prev.currentFileName
         }));
       }
     }

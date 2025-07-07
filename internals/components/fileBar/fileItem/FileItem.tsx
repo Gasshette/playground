@@ -2,7 +2,7 @@ import { IconButton } from '@int/components/iconButton/IconButton';
 import { RemoveIcon } from '@int/icons/RemoveIcon';
 import { SendIcon } from '@int/icons/SendIcon';
 import { FormEventHandler, useEffect, useMemo, useState } from 'react';
-import { defaultFile, PlaygroundProps, usePlaygroundContext } from '@lib/index';
+import { PlaygroundProps, usePlaygroundContext } from '@lib/index';
 import { CodeMirrorFile } from '@lib/types/CodeMirrorFile';
 import { Popover } from 'react-tiny-popover';
 import { Toast } from '@int/components/toast/Toast';
@@ -71,8 +71,8 @@ export const FileItem = (props: FileItemProps) => {
       if (newFiles.length <= 0) {
         setPlaygroundState((prev) => ({
           ...prev,
-          files: [defaultFile],
-          currentFileName: defaultFile.name,
+          files: [],
+          currentFileName: undefined,
           removedFile: fileName
         }));
         return;

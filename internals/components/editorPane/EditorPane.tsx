@@ -5,6 +5,7 @@ import ReactCodeMirror, {
   EditorView,
   Extension,
   ReactCodeMirrorRef,
+  StateEffect,
   ViewUpdate
 } from '@uiw/react-codemirror';
 import { PlaygroundProps } from '../../../lib/types/PlaygroundProps';
@@ -88,9 +89,9 @@ export const EditorPane = (props: PlaygroundProps) => {
   }, [editorConfig, dark, light]);
 
   const getComputedExtensions = useCallback(
-    (fileName: string) => {
+    (fileName?: string) => {
       const extensionsArray: Array<Extension> = [];
-      const fileExtension = langFactory(fileName);
+      const fileExtension = langFactory(fileName ?? '');
 
       if (codeMirrorProps?.extensions) {
         extensionsArray.push(codeMirrorProps.extensions);
@@ -162,6 +163,22 @@ export const EditorPane = (props: PlaygroundProps) => {
 
   useEffect(() => {
     if (codeMirrorRef.current?.view) {
+      // No file in th filebar
+      if (!currentFileName) {
+        codeMirrorRef.current.view.setState(
+          EditorState.create({
+            doc: 'Add a file to start coding !',
+            extensions: getComputedExtensions(currentFileName)
+          })
+        );
+
+        // Set to read-only
+        codeMirrorRef.current.view.dispatch({
+          effects: StateEffect.appendConfig.of(EditorView.editable.of(false))
+        });
+        return;
+      }
+
       const file = files.find((file) => file.name === currentFileName);
 
       if (!file) {

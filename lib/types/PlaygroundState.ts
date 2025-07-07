@@ -21,7 +21,7 @@ export interface PlaygroundState {
   /**
    * The currently selected file name.
    */
-  currentFileName: string;
+  currentFileName?: string;
   /**
    * The editor config.
    */

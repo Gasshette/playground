@@ -1,7 +1,6 @@
 import { EditorState, ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useRef, useContext, createContext, useState, useMemo, useCallback } from 'react';
 import { color, oneDark } from '@codemirror/theme-one-dark';
-import { CodeMirrorFile } from '@lib/types/CodeMirrorFile';
 import { FileBarThemes } from '@lib/types/FileBarThemes';
 import debounce from 'lodash.debounce';
 import { CodeMirrorThemes } from '@lib/types/CodeMirroThemes';
@@ -11,11 +10,6 @@ import { PlaygroundProviderProps } from '@lib/types/PlaygroundProviderProps';
 import { PlaygroundContext } from '@lib/types/PlaygroundContext';
 
 const Context = createContext<PlaygroundContext | null>(null);
-
-export const defaultFile: CodeMirrorFile = {
-  name: 'default.html',
-  state: EditorState.create()
-};
 
 const defaultUserTheme: FileBarThemes = {
   dark: {
@@ -51,8 +45,8 @@ export const PlaygroundProvider = (props: PlaygroundProviderProps) => {
             name: file.name,
             state: EditorState.create({ doc: file.content })
           }))
-        : [defaultFile],
-    currentFileName: defaultFiles.length > 0 ? defaultFiles[0].name : defaultFile.name,
+        : [],
+    currentFileName: defaultFiles.length > 0 ? defaultFiles[0].name : undefined,
     editorConfig: {
       lineWrapping: true,
       theme: 'dark'
