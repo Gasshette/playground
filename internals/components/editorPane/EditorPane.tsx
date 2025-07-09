@@ -100,6 +100,7 @@ export const EditorPane = (props: PlaygroundProps) => {
       const updateListener = EditorView.updateListener.of(handleUpdate);
 
       const newExtensions = [
+        ...(fileExtension ? [langCompartment.of(fileExtension)] : []),
         keymap.of([
           ...defaultKeymap,
           { key: 'Ctrl-Shift-ArrowUp', run: moveLineUp },
@@ -108,7 +109,6 @@ export const EditorPane = (props: PlaygroundProps) => {
           { key: 'Shift-Alt-ArrowDown', run: copyLineDown },
           { key: 'Ctrl-Shift-k', run: deleteLine }
         ]),
-        ...(fileExtension ? [langCompartment.of(fileExtension)] : []),
         editorConfigCompartment.of(getEditorConfigExtensions()),
         extensionsArray,
         basicSetup({
