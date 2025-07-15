@@ -17,7 +17,7 @@ export const IconButton = forwardRef<never, IconButtonProps>((props, ref) => {
   );
 
   return (
-    <button ref={ref} className={classes} style={style} {...rest}>
+    <button ref={ref} type="button" className={classes} style={style} {...rest}>
       {children}
     </button>
   );
