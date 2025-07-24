@@ -15,3 +15,6 @@ export * from './types/EventBus';
 export * from './types/FileBarThemes';
 export * from './types/UserFile';
 export * from './utils';
+
+/* CodeMirror */
+export * from '@uiw/react-codemirror';
