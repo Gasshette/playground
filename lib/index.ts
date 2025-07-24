@@ -17,4 +17,21 @@ export * from './types/UserFile';
 export * from './utils';
 
 /* CodeMirror */
-export * from '@uiw/react-codemirror';
+export * from '@codemirror/view';
+export * from '@codemirror/state';
+export {
+  type BasicSetupOptions,
+  type MinimalSetupOptions,
+  basicSetup,
+  minimalSetup
+} from '@uiw/codemirror-extensions-basic-setup';
+export {
+  type ReactCodeMirrorProps,
+  type ReactCodeMirrorRef,
+  type DefaultExtensionsOptions,
+  type UseCodeMirror,
+  type Statistics,
+  getDefaultExtensions,
+  useCodeMirror,
+  getStatistics
+} from '@uiw/react-codemirror';
