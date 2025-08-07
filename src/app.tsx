@@ -1,6 +1,5 @@
 import { PlaygroundProvider } from '@lib/index';
 import { Hint } from './components/Hint';
-import { MultiFilePlayground } from './components/MultiFilePlayground';
 import { Title } from './components/Title';
 import { PlaygroundImpl } from './components/PlaygroundImpl';
 import { UserFile } from '@lib/types/UserFile';
@@ -88,7 +87,7 @@ export const App = () => {
         provide themes (light and dark) through the codeMirrorThemes provider property
       </Hint>
       <PlaygroundProvider fileBarThemes={theme} defaultFiles={defaultFiles}>
-        <MultiFilePlayground height={800} />
+        <PlaygroundImpl multiFile height={800} />
       </PlaygroundProvider>
     </div>
   );

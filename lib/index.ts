@@ -19,6 +19,7 @@ export * from './utils';
 /* CodeMirror */
 export * from '@codemirror/view';
 export * from '@codemirror/state';
+export * from '@codemirror/commands';
 export {
   type BasicSetupOptions,
   type MinimalSetupOptions,

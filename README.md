@@ -10,7 +10,7 @@ The simplest version extends to the full height of the screen:
 
 ```tsx
 <PlaygroundProvider defaultFiles={defaultFiles}>
-  <Playground View={View} />
+  <Playground View={View} codeMirrorProps={{ extensions: [keymap.of([indentWithTab])] }} />
 </PlaygroundProvider>
 ```
 
@@ -32,6 +32,7 @@ const defaultFiles: Array<UserFile> = [
 - **The `PlaygroundProvider` is required**: it provides all context values, states, and refs.
 - **The `View` component is required**: it defines how to render the content written in the editor. An example implementation is available in the GitHub repository (using an iframe, for instance).
 - **Run event**: If the `View` component subscribes to a custom "Run" event, a "Run" button will appear in the UI to trigger the event. This allows actions like re-rendering an iframe with the current editor content.
+- **keymap.of([indentWithTab])**: Adding this to the extensions allows _Tab_ to work in the editor. By default, CodeMirror does not have any keyboard trap to be W3C compliant. ["Learn more about it"](https://codemirror.net/examples/tab/).
 
 ⚠️ _Avoid vertical padding and margin around the playground to prevent layout overflow._
 

@@ -1,4 +1,4 @@
-import { Playground, PlaygroundProps } from '../../lib';
+import { indentWithTab, keymap, Playground, PlaygroundProps } from '../../lib';
 import { Header } from './Header';
 import { View } from './View';
 
@@ -17,7 +17,8 @@ export const PlaygroundImpl = (props: Omit<PlaygroundProps, 'View'>) => {
         ...props.paneWrapperStyle
       }}
       codeMirrorProps={{
-        ...props.codeMirrorProps
+        ...props.codeMirrorProps,
+        extensions: [keymap.of([indentWithTab])]
       }}
       Header={Header}
       View={View}
